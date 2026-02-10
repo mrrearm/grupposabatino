@@ -36,7 +36,7 @@
             width: 100%;
             background: linear-gradient(135deg, var(--green), var(--dark-green));
             z-index: 1000;
-            padding: 0.8rem 0; /* Ridotto il padding verticale per compensare il logo grande */
+            padding: 0.8rem 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             transform: translateY(-100%);
             animation: slideDown 1s ease-out 0.5s forwards;
@@ -58,54 +58,65 @@
             position: relative;
         }
 
-        /* MODIFICA: Logo Grande e Visibile */
+        /* Logo Header */
         .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px; /* Aumentato lo spazio tra logo e testo */
-            
             font-family: 'Playfair Display', serif;
-            font-size: 2.8rem; /* Testo più grande per bilanciare il logo (era 2.2rem) */
+            font-size: 2.8rem;
             font-weight: 700;
-            color: var(--white);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
             margin-bottom: 1rem;
             text-align: center;
             letter-spacing: 1px;
             line-height: 1.1;
+            z-index: 1200;
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            color: var(--white);
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-link:hover {
+            opacity: 0.9;
         }
 
         .logo img {
-            height: 100px; /* Aumentato da 60px a 100px per massima visibilità */
+            height: 100px;
             width: auto;
             object-fit: contain;
             filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.3));
             transition: transform 0.3s ease;
         }
         
-        .logo:hover img {
-            transform: scale(1.05); /* Piccolo effetto zoom al passaggio del mouse */
+        .logo-link:hover img {
+            transform: scale(1.05);
         }
-        /* FINE MODIFICA */
 
         @media (max-width: 768px) {
             .logo {
                 margin-right: auto;
                 padding-left: 10px;
+                padding-right: 60px; /* Spazio per evitare sovrapposizione col menu */
                 justify-content: flex-start;
                 text-align: left;
                 width: 100%;
-                font-size: 1.8rem; /* Testo mobile equilibrato */
+                font-size: 1.8rem;
+            }
+
+            .logo-link {
+                justify-content: flex-start;
                 gap: 15px;
             }
 
             .logo img {
-                height: 65px; /* Logo mobile aumentato (era 45px) */
+                height: 65px;
             }
         }
 
-        /* Aggiustamento per schermi molto piccoli */
         @media (max-width: 400px) {
             .logo {
                 font-size: 1.4rem;
@@ -160,7 +171,8 @@
             gap: 4px;
             position: absolute;
             right: 2rem;
-            top: 2.5rem; /* Aggiustato per centrare col logo più grande */
+            /* MODIFICA: Spostato più in basso (era 2.5rem) */
+            top: 3.8rem; 
             z-index: 1100;
         }
 
@@ -180,6 +192,7 @@
         /* Hero Section */
         .hero {
             height: 100vh;
+            min-height: 800px;
             background: linear-gradient(45deg, var(--green), var(--dark-green), var(--yellow));
             background-size: 400% 400%;
             animation: gradientShift 12s ease-in-out infinite;
@@ -188,7 +201,7 @@
             justify-content: center;
             position: relative;
             overflow: hidden;
-            padding-top: 80px; /* Spazio extra per l'header più grande */
+            padding-top: 100px;
         }
 
         @keyframes gradientShift {
@@ -213,9 +226,25 @@
             z-index: 2;
             max-width: 800px;
             padding: 0 2rem;
-            transform: translateY(20px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-logo {
+            width: 180px;
+            height: auto;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
             opacity: 0;
-            animation: fadeInUp 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.8s forwards;
+            animation: fadeInUp 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.5s forwards;
+        }
+
+        @media (max-width: 768px) {
+            .hero-logo {
+                width: 140px;
+                margin-bottom: 1.5rem;
+            }
         }
 
         .hero h1 {
@@ -225,12 +254,15 @@
             text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
             font-weight: 700;
             letter-spacing: 1px;
+            opacity: 0;
+            animation: fadeInUp 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.8s forwards;
         }
 
         .hero p {
             font-size: 1.3rem;
             margin-bottom: 2rem;
-            animation-delay: 1s;
+            opacity: 0;
+            animation: fadeInUp 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 1s forwards;
         }
 
         .cta-button {
@@ -802,8 +834,10 @@
     <header class="header">
         <nav class="nav-container">
             <div class="logo">
-                <img src="images/logo.png" alt="Logo Gruppo Sabatino SRL">
-                GRUPPO SABATINO SRL
+                <a href="#home" class="logo-link">
+                    <img src="images/logo.png" alt="Logo Gruppo Sabatino SRL">
+                    GRUPPO SABATINO SRL
+                </a>
             </div>
             
             <div class="hamburger">
@@ -831,6 +865,8 @@
         <div class="floating-element">🚧</div>
         
         <div class="hero-content">
+            <img src="images/logo.png" alt="Logo Gruppo Sabatino SRL" class="hero-logo">
+            
             <h1>GRUPPO SABATINO SRL</h1>
             <p>Progettiamo il tuo futuro - Da anni operiamo con esperienza nel campo dei lavori edili pubblici e privati. L'impegno, la serietà e la puntualità sono i nostri punti di forza.</p>
             <a href="#contact" class="cta-button">Richiedi Preventivo</a>
