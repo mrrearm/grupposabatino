@@ -27,6 +27,7 @@
             line-height: 1.6;
             color: var(--dark-gray);
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         /* Header */
@@ -40,6 +41,19 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             transform: translateY(-100%);
             animation: slideDown 1s ease-out 0.5s forwards;
+        }
+
+        /* SCROLL PROGRESS BAR STYLE */
+        .scroll-progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: var(--yellow);
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px rgba(255, 210, 63, 0.7);
+            z-index: 1001;
         }
 
         @keyframes slideDown {
@@ -100,7 +114,7 @@
             .logo {
                 margin-right: auto;
                 padding-left: 10px;
-                padding-right: 60px; /* Spazio per evitare sovrapposizione col menu */
+                padding-right: 60px;
                 justify-content: flex-start;
                 text-align: left;
                 width: 100%;
@@ -171,9 +185,9 @@
             gap: 4px;
             position: absolute;
             right: 2rem;
-            /* MODIFICA: Spostato più in basso (era 2.5rem) */
             top: 3.8rem; 
             z-index: 1100;
+            padding: 10px; /* Area cliccabile più grande */
         }
 
         @media (max-width: 768px) {
@@ -187,6 +201,7 @@
             height: 3px;
             background: var(--white);
             transition: all 0.3s ease;
+            pointer-events: none; /* Assicura che il click vada sul div */
         }
 
         /* Hero Section */
@@ -732,7 +747,42 @@
             padding: 2rem 0;
         }
 
-        /* Responsive Design */
+        /* SCROLL TOP BUTTON STYLE */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--green), var(--dark-green));
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 900;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scroll-top-btn.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .scroll-top-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(67, 160, 71, 0.4);
+            background: var(--green);
+        }
+
         @media (max-width: 768px) {
             .nav-container {
                 padding: 0 1.5rem;
@@ -787,6 +837,13 @@
 
             .section {
                 padding: 4rem 0;
+            }
+            
+            .scroll-top-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
             }
         }
 
@@ -857,6 +914,7 @@
                 <li><a href="#contact">Contatti</a></li>
             </ul>
         </nav>
+        <div id="scrollProgressBar" class="scroll-progress-bar"></div>
     </header>
 
     <section id="home" class="hero">
@@ -1146,27 +1204,62 @@
         </div>
     </footer>
 
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Torna in alto">↑</button>
+
     <script>
-        // Mobile menu toggle
+        // --- MOBILE MENU LOGIC ---
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');
 
-        hamburger.addEventListener('click', () => {
+        // Funzione centralizzata per chiudere il menu
+        function closeMobileMenu() {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+
+            // Reset manuale dell'icona (stanghette dritte)
+            const spans = hamburger.querySelectorAll('span');
+            spans[0].style.transform = 'rotate(0) translate(0)';
+            spans[1].style.opacity = '1';
+            spans[2].style.transform = 'rotate(0) translate(0)';
+        }
+
+        // Toggle click sul pulsante hamburger
+        hamburger.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evita che il click venga letto subito dal document
+            
+            // Toggle classi
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
             
+            // Gestione animazione icona
+            const spans = hamburger.querySelectorAll('span');
             if (hamburger.classList.contains('active')) {
-                hamburger.children[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-                hamburger.children[1].style.opacity = '0';
-                hamburger.children[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+                // Icona X
+                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
             } else {
-                hamburger.children[0].style.transform = 'rotate(0) translate(0)';
-                hamburger.children[1].style.opacity = '1';
-                hamburger.children[2].style.transform = 'rotate(0) translate(0)';
+                // Icona Hamburger standard
+                closeMobileMenu();
             }
         });
 
-        // Gallery functionality
+        // Chiudi il menu se si clicca FUORI dal menu
+        document.addEventListener('click', (e) => {
+            // Se il menu è aperto E il click non è avvenuto dentro il menu
+            if (navMenu.classList.contains('active') && !navMenu.contains(e.target)) {
+                closeMobileMenu();
+            }
+        });
+
+        // Chiudi il menu quando si clicca su un link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                closeMobileMenu();
+            });
+        });
+
+        // --- GALLERY LOGIC ---
         let currentSlide = 0;
         const totalSlides = 12;
         const galleryTrack = document.getElementById('galleryTrack');
@@ -1216,7 +1309,7 @@
         showSlide(0);
         startGalleryInterval();
 
-        // Fade in animation on scroll
+        // --- SCROLL ANIMATIONS ---
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -100px 0px'
@@ -1234,9 +1327,13 @@
             observer.observe(el);
         });
 
-        // Header background on scroll
+        // --- SCROLL HANDLERS (Header, Button, Progress Bar) ---
+        const header = document.querySelector('.header');
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        const progressBar = document.getElementById('scrollProgressBar');
+
         window.addEventListener('scroll', () => {
-            const header = document.querySelector('.header');
+            // 1. Header Logic
             if (window.scrollY > 100) {
                 header.style.background = 'linear-gradient(135deg, rgba(67, 160, 71, 0.95), rgba(46, 125, 50, 0.95))';
                 header.style.backdropFilter = 'blur(10px)';
@@ -1244,9 +1341,30 @@
                 header.style.background = 'linear-gradient(135deg, var(--green), var(--dark-green))';
                 header.style.backdropFilter = 'none';
             }
+
+            // 2. Scroll Top Button Logic
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add('active');
+            } else {
+                scrollTopBtn.classList.remove('active');
+            }
+
+            // 3. Scroll Progress Bar Logic
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + "%";
         });
 
-        // Smooth scrolling
+        // Click event for Scroll Top Button
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Smooth scrolling for anchors (Standard)
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -1260,13 +1378,6 @@
                         behavior: 'smooth'
                     });
                 }
-                
-                // Close mobile menu if open
-                navMenu.classList.remove('active');
-                hamburger.classList.remove('active');
-                hamburger.children[0].style.transform = 'rotate(0) translate(0)';
-                hamburger.children[1].style.opacity = '1';
-                hamburger.children[2].style.transform = 'rotate(0) translate(0)';
             });
         });
     </script>
