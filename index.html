@@ -36,7 +36,7 @@
             width: 100%;
             background: linear-gradient(135deg, var(--green), var(--dark-green));
             z-index: 1000;
-            padding: 1.5rem 0;
+            padding: 0.8rem 0; /* Ridotto il padding verticale per compensare il logo grande */
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             transform: translateY(-100%);
             animation: slideDown 1s ease-out 0.5s forwards;
@@ -58,25 +58,60 @@
             position: relative;
         }
 
+        /* MODIFICA: Logo Grande e Visibile */
         .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px; /* Aumentato lo spazio tra logo e testo */
+            
             font-family: 'Playfair Display', serif;
-            font-size: 2.2rem;
+            font-size: 2.8rem; /* Testo più grande per bilanciare il logo (era 2.2rem) */
             font-weight: 700;
             color: var(--white);
             text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             text-align: center;
             letter-spacing: 1px;
-            line-height: 1.2;
+            line-height: 1.1;
         }
+
+        .logo img {
+            height: 100px; /* Aumentato da 60px a 100px per massima visibilità */
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.3));
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover img {
+            transform: scale(1.05); /* Piccolo effetto zoom al passaggio del mouse */
+        }
+        /* FINE MODIFICA */
 
         @media (max-width: 768px) {
             .logo {
                 margin-right: auto;
-                padding-left: 60px;
+                padding-left: 10px;
+                justify-content: flex-start;
                 text-align: left;
                 width: 100%;
-                font-size: 1.8rem;
+                font-size: 1.8rem; /* Testo mobile equilibrato */
+                gap: 15px;
+            }
+
+            .logo img {
+                height: 65px; /* Logo mobile aumentato (era 45px) */
+            }
+        }
+
+        /* Aggiustamento per schermi molto piccoli */
+        @media (max-width: 400px) {
+            .logo {
+                font-size: 1.4rem;
+            }
+            .logo img {
+                height: 50px;
             }
         }
 
@@ -124,8 +159,8 @@
             cursor: pointer;
             gap: 4px;
             position: absolute;
-            right: 3rem;
-            top: 2rem;
+            right: 2rem;
+            top: 2.5rem; /* Aggiustato per centrare col logo più grande */
             z-index: 1100;
         }
 
@@ -153,6 +188,7 @@
             justify-content: center;
             position: relative;
             overflow: hidden;
+            padding-top: 80px; /* Spazio extra per l'header più grande */
         }
 
         @keyframes gradientShift {
@@ -763,10 +799,13 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <nav class="nav-container">
-            <div class="logo">GRUPPO SABATINO SRL</div>
+            <div class="logo">
+                <img src="images/logo.png" alt="Logo Gruppo Sabatino SRL">
+                GRUPPO SABATINO SRL
+            </div>
+            
             <div class="hamburger">
                 <span></span>
                 <span></span>
@@ -786,7 +825,6 @@
         </nav>
     </header>
 
-    <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="floating-element">🏗️</div>
         <div class="floating-element">⚒️</div>
@@ -799,7 +837,6 @@
         </div>
     </section>
 
-    <!-- About Section (Storia) -->
     <section id="about" class="section about">
         <div class="container">
             <h2 class="section-title fade-in">La Nostra Storia</h2>
@@ -822,7 +859,6 @@
         </div>
     </section>
 
-    <!-- Gallery Section -->
     <section id="gallery" class="gallery">
         <div class="container">
             <h2 class="section-title fade-in">I Nostri Lavori</h2>
@@ -870,7 +906,6 @@
         </div>
     </section>
 
-    <!-- Progettazione Section -->
     <section id="design" class="detailed-section">
         <div class="container">
             <h2 class="section-title fade-in">Progettazione</h2>
@@ -893,7 +928,6 @@
         </div>
     </section>
 
-    <!-- Ristrutturazioni Section -->
     <section id="renovations" class="detailed-section">
         <div class="container">
             <h2 class="section-title fade-in">Ristrutturazioni</h2>
@@ -914,7 +948,6 @@
         </div>
     </section>
 
-    <!-- Manutenzione Section -->
     <section id="maintenance" class="detailed-section">
         <div class="container">
             <h2 class="section-title fade-in">Manutenzione</h2>
@@ -971,7 +1004,6 @@
         </div>
     </section>
 
-    <!-- Nuove Costruzioni Section -->
     <section id="construction" class="detailed-section">
         <div class="container">
             <h2 class="section-title fade-in">Nuove Costruzioni</h2>
@@ -995,7 +1027,6 @@
         </div>
     </section>
 
-    <!-- Services Section -->
     <section id="services" class="section services">
         <div class="container">
             <h2 class="section-title fade-in">I Nostri Servizi</h2>
@@ -1039,7 +1070,6 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
     <section id="contact" class="section contact">
         <div class="container">
             <h2 class="section-title yellow fade-in">Contattaci</h2>
@@ -1073,7 +1103,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <p>&copy; 2025 Gruppo Sabatino SRL - Pimonte (NA) | Tutti i diritti riservati</p>
